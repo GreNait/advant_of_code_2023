@@ -1,4 +1,4 @@
-from src.trebuchet_letters import TrebuchetLetters
+from src.trebuchet.trebuchet_letters import TrebuchetLetters
 
 import pytest
 
@@ -14,11 +14,12 @@ test_batch = [
     ("kc1", "1", "1", 11),
     ("sevenrhqt9sixthreethree", "7", "3", 73),
     ("oneight", "1", "8", 18),
-    ("chphzzqb6threeqhspbgkrn6\n", "6", "6", 66)
+    ("chphzzqb6threeqhspbgkrn6\n", "6", "6", 66),
 ]
 
 sum_of_test_batch = 281
 trebuchet = TrebuchetLetters()
+
 
 def test_provided_list():
     test_batch = [
@@ -33,9 +34,11 @@ def test_provided_list():
     trebuchet = TrebuchetLetters(test_batch)
     assert sum(trebuchet.calibrations) == 281
 
+
 def test_raise_exception_when_no_number():
     with pytest.raises(ValueError):
         trebuchet._first_digit(value="abcd")
+
 
 @pytest.mark.parametrize("value, first, last, combined", test_batch)
 class TestTrebuchetLetterSingleValue:
@@ -48,14 +51,23 @@ class TestTrebuchetLetterSingleValue:
     def test_combinded_digits(self, value, first, last, combined):
         assert trebuchet.calculate_calibration(value) == combined
 
+
 @pytest.mark.parametrize(
     "values, calibrations",
     [
         (
-            ["two1nine", "eightwothree", "abcone2threexyz", "xtwone3four","4nineeightseven2", "zoneight234", "7pqrstsixteen"],
-            [29,83,13,24,42,14,76]
+            [
+                "two1nine",
+                "eightwothree",
+                "abcone2threexyz",
+                "xtwone3four",
+                "4nineeightseven2",
+                "zoneight234",
+                "7pqrstsixteen",
+            ],
+            [29, 83, 13, 24, 42, 14, 76],
         )
-    ]
+    ],
 )
 class TestTrebuchetLetterListOfValues:
     def test_list_of_calibrations(self, values, calibrations):
@@ -77,12 +89,19 @@ class TestCompareSolutions:
             "nine": "9",
         }
 
-        line_new = [x if (x := "".join([v for k, v in mappings.items() if line[i:].startswith(k)])) else line[i] for i in range(len(line))]
+        line_new = [
+            x
+            if (
+                x := "".join([v for k, v in mappings.items() if line[i:].startswith(k)])
+            )
+            else line[i]
+            for i in range(len(line))
+        ]
         digits = [int(i) for i in line_new if i.isdigit()]
         return digits[0] * 10 + digits[-1]
-    
+
     def test_provided_data(self):
-        with open("src/calibrations.txt", "r") as file:
+        with open("src/trebuchet/calibrations.txt", "r") as file:
             list_of_codes = file.readlines()
 
         for line in list_of_codes:

@@ -1,4 +1,4 @@
-from src.trebuchet import Trebuchet
+from src.trebuchet.trebuchet import Trebuchet
 
 import pytest
 
@@ -8,8 +8,9 @@ test_batch = [
     ("1abc2", "1", "2", 12),
     ("pqr3stu8vwx", "3", "8", 38),
     ("a1b2c3d4e5f", "1", "5", 15),
-    ("treb7uchet", "7", "7", 77)
+    ("treb7uchet", "7", "7", 77),
 ]
+
 
 @pytest.mark.parametrize("value, first, last, combined", test_batch)
 class TestTrebuchetSingleValues:
@@ -22,7 +23,11 @@ class TestTrebuchetSingleValues:
     def test_combine_digits(self, value, first, last, combined):
         assert trebuchet.calculate_calibration(value) == combined
 
-@pytest.mark.parametrize("values, calibrations", [(["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"],[12, 38, 15, 77])])
+
+@pytest.mark.parametrize(
+    "values, calibrations",
+    [(["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"], [12, 38, 15, 77])],
+)
 class TestTrebuchetListOfValues:
     def test_list_of_calibrations(self, values, calibrations):
         assert trebuchet.calculate_calibrations(values) == calibrations
@@ -33,7 +38,7 @@ class TestTrebuchetListOfValues:
 
     def test_set_list_of_calibrations(self, values, calibrations):
         trebuchet = Trebuchet(values=values)
-        
+
         with pytest.raises(ValueError):
             trebuchet.calibrations = "test"
 
