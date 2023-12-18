@@ -1,7 +1,7 @@
-from src.gear_ratios import GearRatios
+from src.gear_ratios.gear_ratios import GearRatios
 
-with open("src/gear_ratio.txt", "r") as file:
+with open("src/gear_ratio.txt", "r", encoding="UTF-8") as file:
     content = file.read()
 
-gear_ratios = GearRatios(lines = content)
+gear_ratios = GearRatios(lines=content)
 print(gear_ratios.sum_adjacent_numbers)

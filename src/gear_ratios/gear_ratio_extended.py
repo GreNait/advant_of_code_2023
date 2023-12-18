@@ -1,12 +1,11 @@
-# from src.gear_ratios import GearRatios
 from dataclasses import dataclass, field
 import math
 import re
-from tracemalloc import start
 
-from src.gear_ratios import Number, Symbol
+from src.gear_ratios.gear_ratios import Number
 
 GEAR_SYMBOL = "*"
+
 
 @dataclass
 class Gear:
@@ -24,31 +23,33 @@ class Gear:
 
         return 0
 
+
 @dataclass
 class GearRange:
     start: int
     stop: int
 
     def __post_init__(self):
-        self.gear_range = set(range(self.start, self.stop+1))
-        
+        self.gear_range = set(range(self.start, self.stop + 1))
+
+
 class GearRanges:
     def __init__(self, gear_ranges: list[GearRange] = None):
         self.gear_ranges = []
-        
+
         for gear_range in gear_ranges:
             self.gear_ranges.append(gear_range)
 
-    def __add__(self, gear:Gear):
+    def __add__(self, gear: Gear):
         self.gear_ranges.append(gear)
 
     def __eq__(self, other):
         return self.gear_ranges == other.gear_ranges
-    
+
     def __iter__(self):
         self.current = -1
         return self
-    
+
     def __next__(self):
         self.current += 1
         if self.current < len(self.gear_ranges):
@@ -66,14 +67,14 @@ class GearRatiosExtended:
     @property
     def line_length(self):
         return self._line_length
-        
+
     def _find_gears(self, lines: str):
         gears: list = []
-        for match in re.finditer(r'\*', lines):
+        for match in re.finditer(r"\*", lines):
             gears.append(Gear(match.start()))
-        
+
         return gears
-    
+
     def _numbers_on_gear(self, gear: Gear, lines: str):
         gear_ranges = self._gear_range(gear=gear)
 
@@ -83,14 +84,14 @@ class GearRatiosExtended:
         # if start < 0:
         #     start = 0
 
-        for match in re.finditer(r'\d+', lines):
+        for match in re.finditer(r"\d+", lines):
             number = Number(match.group(), match.start())
-            
+
             if self._number_in_range(number=number, gear_ranges=gear_ranges):
                 gear.numbers.append(number)
 
         return gear
-    
+
     def _gear_range(self, gear: Gear) -> GearRanges:
         front = gear.position - 1
         tail = gear.position + 1
@@ -108,5 +109,5 @@ class GearRatiosExtended:
                 return True
 
     def _calculate_line_length(self, lines: str) -> int:
-        line_length = len(lines[:lines.find("\n")]) +1
+        line_length = len(lines[: lines.find("\n")]) + 1
         return line_length

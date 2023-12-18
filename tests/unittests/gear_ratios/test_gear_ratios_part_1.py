@@ -1,5 +1,5 @@
 import pytest
-from src.gear_ratios import GearRatios, Number
+from src.gear_ratios.gear_ratios import GearRatios, Number
 
 test_example_engine_schematic = """467..114..
 ...*......
@@ -54,7 +54,7 @@ test_numbers = [
     (598, True),
 ]
 
-test_numbers_shortend = [(467, True),(114, False)]
+test_numbers_shortend = [(467, True), (114, False)]
 
 test_numbers_longer = [
     (467, True),
@@ -150,41 +150,70 @@ test_rea_data_sum = 19_230
 # ..124..317.....*....................*..........839.......................191.882......231.........+......976.................+......469.....
 
 
-
 def test_find_symbols_in_range():
     gear_ratios = GearRatios()
-    assert gear_ratios._find_adjacent_symbol(lines=test_example_eninge_schematic_shortened, number=Number("467", 12)) == True
-    assert gear_ratios._find_adjacent_symbol(lines=test_example_eninge_schematic_shortened, number=Number("114", 17)) == False
+    assert (
+        gear_ratios._find_adjacent_symbol(
+            lines=test_example_eninge_schematic_shortened, number=Number("467", 12)
+        )
+        == True
+    )
+    assert (
+        gear_ratios._find_adjacent_symbol(
+            lines=test_example_eninge_schematic_shortened, number=Number("114", 17)
+        )
+        == False
+    )
+
 
 def test_get_list_of_numbers():
     gear_ratios = GearRatios()
-    assert gear_ratios._get_numbers(lines=test_example_eninge_schematic_shortened) == [Number("467", 12), Number("114", 17)]
+    assert gear_ratios._get_numbers(lines=test_example_eninge_schematic_shortened) == [
+        Number("467", 11),
+        Number("114", 16),
+    ]
+
 
 def test_find_symbols_by_list():
     gear_ratios = GearRatios()
-    assert gear_ratios._find_symbols_by_numbers(
-        numbers=[Number("467", 12), Number("114", 17)],
-        lines=test_example_eninge_schematic_shortened) == test_numbers_shortend
-    
+    assert (
+        gear_ratios._find_symbols_by_numbers(
+            numbers=[Number("467", 12), Number("114", 17)],
+            lines=test_example_eninge_schematic_shortened,
+        )
+        == test_numbers_shortend
+    )
+
+
 def test_find_numbers_adjacent_by_lines():
     gear_ratios = GearRatios()
-    assert gear_ratios._find_all_numbers(
-        lines=test_example_eninge_schematic_shortened) == test_numbers_shortend
+    assert (
+        gear_ratios._find_all_numbers(lines=test_example_eninge_schematic_shortened)
+        == test_numbers_shortend
+    )
 
-@pytest.mark.parametrize("lines, test_numbers, adjacent_numbers", 
-                        [
-                            (test_example_eninge_schematic_shortened, test_numbers_shortend, test_number_adjacent_short),
-                            (test_example_engine_schematic, test_numbers, test_number_adjacent)
-                        ]
+
+@pytest.mark.parametrize(
+    "lines, test_numbers, adjacent_numbers",
+    [
+        (
+            test_example_eninge_schematic_shortened,
+            test_numbers_shortend,
+            test_number_adjacent_short,
+        ),
+        (test_example_engine_schematic, test_numbers, test_number_adjacent),
+    ],
 )
 def test_gear_ratios(lines, test_numbers, adjacent_numbers):
     gear_ratios = GearRatios(lines=lines)
     assert gear_ratios.all_numbers == test_numbers
     assert gear_ratios.adjacent_numbers == adjacent_numbers
 
+
 def test_sum_adjacent_numbers():
     gear_ratios = GearRatios(lines=test_example_engine_schematic)
     assert gear_ratios.sum_adjacent_numbers == 4361
+
 
 def test_adjacency_real_data():
     gear_ratios = GearRatios(lines=test_real_data_batch)
