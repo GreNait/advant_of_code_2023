@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "advant-of-code-2023"
+version = "0.0.0"
+description = "Package for advent of code challange"
+authors = ["GreNait <flyingsepl@googlemail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.4.3"
+commitizen = "^3.13.0"
+pre-commit = "^3.6.0"
+
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "semver"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
