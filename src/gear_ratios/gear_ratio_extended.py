@@ -61,8 +61,23 @@ class GearRatiosExtended:
     def __init__(self, lines: str = None):
         if lines:
             self._line_length = self._calculate_line_length(lines)
+            self._gears = self._find_gears(lines=lines)
+            self._gears = [self._numbers_on_gear(gear, lines) for gear in self._gears]
+
+            sum = 0
+            for gear in self._gears:
+                try:
+                    sum += int(gear.numbers[0].number) * int(gear.numbers[1].number)
+                except IndexError:
+                    pass
+
+            self._power_all_gears = sum
         else:
             self._line_length = None
+
+    @property
+    def power_all_gears(self):
+        return self._power_all_gears
 
     @property
     def line_length(self):
