@@ -1,8 +1,8 @@
 import pathlib
 
-class LoadGames:
 
-    def __init__(self, path_to_list: pathlib.Path=None):
+class LoadGames:
+    def __init__(self, path_to_list: pathlib.Path = None):
         if path_to_list:
             self._games = self._load_list_of_games(path_to_list)
 
@@ -22,22 +22,22 @@ class LoadGames:
 
     def format_game(self, line):
         formated_game = {}
-        
+
         line = line.replace(";", ",")
         game, content = line.split(":")
         content = content.split(",")
 
         entries = []
         for entry in content:
-            a,b = entry.strip().split(" ")
+            a, b = entry.strip().split(" ")
             entries.append((int(a), b))
 
         formated_game[game] = entries
         return formated_game
 
-class CubeConundrum:
 
-    def __init__(self, games: dict = None, limits:list[tuple] = None):
+class CubeConundrum:
+    def __init__(self, games: dict = None, limits: list[tuple] = None):
         if games is not None and limits is not None:
             self._games = games
             self._validates = [self._valid_game(games[game], limits) for game in games]
@@ -46,42 +46,44 @@ class CubeConundrum:
     @property
     def validates(self) -> list[bool]:
         return self._validates
-    
+
     @property
     def sum_ids(self) -> int:
         return self._sum_ids
 
-    def _valid_game(self, game: list[tuple], limits:list[tuple]) -> bool:
+    def _valid_game(self, game: list[tuple], limits: list[tuple]) -> bool:
         for limit in limits:
             for entry in game:
                 if limit[1] == entry[1]:
                     if limit[0] < entry[0]:
                         return False
-        
+
         return True
-    
-    def _calculate_ids(self, validations:list) -> int:
+
+    def _calculate_ids(self, validations: list) -> int:
         sum_validations = 0
 
         for entry, validation in enumerate(validations, start=1):
             if validation:
-                sum_validations+=entry
+                sum_validations += entry
 
         return sum_validations
-    
+
 
 class CubeConundrumExtended(CubeConundrum):
-
     @property
     def overall_power_of_cubes(self):
         return sum(self.power_of_cubes)
 
     @property
     def power_of_cubes(self):
-
         cubes = []
         for game in self._games:
-            cubes.append(self._calculate_power_of_cubes(cubes=self._min_cubes_of_game(game=self._games[game])))
+            cubes.append(
+                self._calculate_power_of_cubes(
+                    cubes=self._min_cubes_of_game(game=self._games[game])
+                )
+            )
 
         return cubes
 
@@ -95,9 +97,13 @@ class CubeConundrumExtended(CubeConundrum):
 
     def _min_cubes_of_game(self, game: list[tuple]) -> dict:
         sorted_cubes = sorted(game, reverse=True)
-        
-        blue_cubes = self.__get_highest_cube(sorted_cubes=sorted_cubes, cube_color="blue")
-        green_cubes = self.__get_highest_cube(sorted_cubes=sorted_cubes, cube_color="green")
+
+        blue_cubes = self.__get_highest_cube(
+            sorted_cubes=sorted_cubes, cube_color="blue"
+        )
+        green_cubes = self.__get_highest_cube(
+            sorted_cubes=sorted_cubes, cube_color="green"
+        )
         red_cubes = self.__get_highest_cube(sorted_cubes=sorted_cubes, cube_color="red")
 
         return [blue_cubes, green_cubes, red_cubes]

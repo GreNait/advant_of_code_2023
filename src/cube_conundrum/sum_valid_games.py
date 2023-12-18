@@ -1,8 +1,8 @@
 import pathlib
-from cube_conundrum import CubeConundrum, CubeConundrumExtended
-from cube_conundrum import LoadGames
+from src.cube_conundrum.cube_conundrum import CubeConundrum, CubeConundrumExtended
+from src.cube_conundrum.cube_conundrum import LoadGames
 
-limits = [(12, "red"),(13, "green"),(14, "blue")]
+limits = [(12, "red"), (13, "green"), (14, "blue")]
 
 loaded_games = LoadGames(pathlib.Path("src/list_of_games.txt")).games
 print(CubeConundrum(games=loaded_games, limits=limits).sum_ids)
