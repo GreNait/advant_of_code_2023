@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "advant-of-code-2023"
-version = "0.3.0"
+version = "0.3.1"
 description = "Package for advent of code challange"
 authors = ["GreNait <flyingsepl@googlemail.com>"]
 license = "MIT"
